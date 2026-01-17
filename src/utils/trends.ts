@@ -1,9 +1,7 @@
 import type { UsageStore } from "../types";
 import { getTotalSeconds } from "./data";
 
-/**
- * Gets the date range for a specific number of days before the end date
- */
+
 export const getDateRangeForDays = (
   endDate: string,
   days: number
@@ -20,9 +18,7 @@ export const getDateRangeForDays = (
   return dates;
 };
 
-/**
- * Gets total seconds for a date range
- */
+
 export const getTotalSecondsInRange = (
   usage: UsageStore,
   startDate: string,
@@ -42,9 +38,7 @@ export const getTotalSecondsInRange = (
   return total;
 };
 
-/**
- * Compares current week with previous week
- */
+
 export const getWeekComparison = (
   usage: UsageStore,
   currentWeekStart: string,
@@ -56,7 +50,6 @@ export const getWeekComparison = (
     currentWeekEnd
   );
 
-  // Calculate previous week dates
   const currentStart = new Date(currentWeekStart);
   const prevWeekStart = new Date(currentStart);
   prevWeekStart.setDate(prevWeekStart.getDate() - 7);
@@ -82,9 +75,7 @@ export const getWeekComparison = (
   };
 };
 
-/**
- * Gets day-over-day comparison for today
- */
+
 export const getDayComparison = (usage: UsageStore, date: string) => {
   const todayTotal = getTotalSeconds(usage, date);
 
