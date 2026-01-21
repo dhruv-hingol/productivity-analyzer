@@ -25,11 +25,10 @@ export function ThemeProvider({
   defaultTheme = "system",
   storageKey = "aegis-theme",
   ...props
-}: ThemeProviderProps) {
+}: Readonly<ThemeProviderProps>) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   useEffect(() => {
-    // Load theme from chrome storage
     chrome.storage.local.get([storageKey], (result) => {
       if (result[storageKey]) {
         setTheme(result[storageKey] as Theme);

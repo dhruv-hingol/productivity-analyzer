@@ -31,7 +31,7 @@ export function CommonTable<T>({
   className,
   rowClassName,
   emptyMessage = "No data available.",
-}: CommonTableProps<T>) {
+}: Readonly<CommonTableProps<T>>) {
   return (
     <Table className={cn(className)}>
       <TableHeader className="bg-muted/50 transition-colors">
@@ -53,7 +53,7 @@ export function CommonTable<T>({
               key={rowIndex}
               className={cn(
                 "hover:bg-muted/50 border-border/50 group transition-colors",
-                rowClassName
+                rowClassName,
               )}
             >
               {columns.map((column, colIndex) => (
@@ -64,8 +64,8 @@ export function CommonTable<T>({
                   {column.cell
                     ? column.cell(item)
                     : column.accessorKey
-                    ? (item[column.accessorKey] as React.ReactNode)
-                    : null}
+                      ? (item[column.accessorKey] as React.ReactNode)
+                      : null}
                 </TableCell>
               ))}
             </TableRow>

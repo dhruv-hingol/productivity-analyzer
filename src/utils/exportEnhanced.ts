@@ -1,12 +1,9 @@
 import type { UsageStore, Category } from "@/types";
 import { formatDuration } from "./format";
 
-/**
- * Export usage data as JSON
- */
 export const exportToJSON = (
   usage: UsageStore,
-  categories: Record<string, Category>
+  categories: Record<string, Category>,
 ) => {
   const exportData = {
     exportDate: new Date().toISOString(),
@@ -37,17 +34,13 @@ export const exportToJSON = (
   URL.revokeObjectURL(url);
 };
 
-/**
- * Export usage data as detailed HTML report
- */
 export const exportToHTML = (
   usage: UsageStore,
-  categories: Record<string, Category>
+  categories: Record<string, Category>,
 ) => {
   let totalSeconds = 0;
   const categoryTotals: Record<string, number> = {};
 
-  // Calculate totals
   Object.values(usage).forEach((dayUsage) => {
     Object.entries(dayUsage).forEach(([domain, seconds]) => {
       totalSeconds += seconds;
@@ -128,7 +121,7 @@ export const exportToHTML = (
             <td>${formatDuration(seconds)}</td>
             <td>${((seconds / totalSeconds) * 100).toFixed(1)}%</td>
           </tr>
-        `
+        `,
           )
           .join("")}
       </tbody>
@@ -152,7 +145,7 @@ export const exportToHTML = (
             const dayUsage = usage[date];
             const dayTotal = Object.values(dayUsage).reduce(
               (sum, s) => sum + s,
-              0
+              0,
             );
             const domainCount = Object.keys(dayUsage).length;
             return `

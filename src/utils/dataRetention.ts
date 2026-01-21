@@ -1,25 +1,16 @@
-/**
- * Data retention configuration
- */
-export const DEFAULT_RETENTION_DAYS = 90; // Keep data for 90 days by default
-export const CLEANUP_CHECK_INTERVAL = 30 * 24 * 60; // Check monthly (in minutes)
+export const DEFAULT_RETENTION_DAYS = 90;
+export const CLEANUP_CHECK_INTERVAL = 30 * 24 * 60;
 
-/**
- * Calculate the cutoff date for data retention
- */
 export const getRetentionCutoffDate = (
-  retentionDays: number = DEFAULT_RETENTION_DAYS
+  retentionDays: number = DEFAULT_RETENTION_DAYS,
 ): string => {
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - retentionDays);
   return cutoff.toISOString().split("T")[0];
 };
 
-/**
- * Clean up old usage data beyond retention period
- */
 export const cleanupOldData = async (
-  retentionDays: number = DEFAULT_RETENTION_DAYS
+  retentionDays: number = DEFAULT_RETENTION_DAYS,
 ): Promise<{
   removed: number;
   kept: number;
@@ -45,15 +36,12 @@ export const cleanupOldData = async (
   await chrome.storage.local.set({ usage: cleaned });
 
   console.log(
-    `Data cleanup: Removed ${removedCount} days, kept ${keptCount} days`
+    `Data cleanup: Removed ${removedCount} days, kept ${keptCount} days`,
   );
 
   return { removed: removedCount, kept: keptCount };
 };
 
-/**
- * Get storage usage statistics
- */
 export const getStorageStats = async (): Promise<{
   bytesInUse: number;
   totalDays: number;

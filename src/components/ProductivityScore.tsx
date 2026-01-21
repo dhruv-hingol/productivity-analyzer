@@ -8,22 +8,15 @@ interface ProductivityScoreProps {
   dateRange: { start: string; end: string };
 }
 
-/**
- * Calculate productivity score (0-100) based on:
- * - Time in productive categories (Work, Learning)
- * - Consistency across days
- * - Total active time
- */
 const calculateScore = (
   usage: UsageStore,
   categories: Record<string, Category>,
-  dateRange: { start: string; end: string }
+  dateRange: { start: string; end: string },
 ): { score: number; breakdown: any } => {
   let productiveSeconds = 0;
   let totalSeconds = 0;
   const weights = { Work: 1.0, Learning: 0.9, Social: 0.2, Other: 0.5 };
 
-  // Calculate weighted time across date range
   const start = new Date(dateRange.start);
   const end = new Date(dateRange.end);
   const daysWithData: string[] = [];
@@ -52,23 +45,20 @@ const calculateScore = (
     current.setDate(current.getDate() + 1);
   }
 
-  // Base score: weighted productive time ratio
   const baseScore =
     totalSeconds > 0 ? (productiveSeconds / totalSeconds) * 70 : 0;
 
-  // Consistency bonus: reward regular activity
   const totalDays =
     Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
   const consistencyRatio = daysWithData.length / totalDays;
   const consistencyBonus = consistencyRatio * 20;
 
-  // Active time bonus: reward substantial daily usage (2+ hours/day)
   const avgSecondsPerDay = totalSeconds / Math.max(daysWithData.length, 1);
   const activeBonus = Math.min((avgSecondsPerDay / (2 * 3600)) * 10, 10);
 
   const finalScore = Math.min(
     100,
-    Math.max(0, baseScore + consistencyBonus + activeBonus)
+    Math.max(0, baseScore + consistencyBonus + activeBonus),
   );
 
   return {
@@ -92,7 +82,6 @@ export const ProductivityScore = ({
 }: ProductivityScoreProps) => {
   const { score, breakdown } = calculateScore(usage, categories, dateRange);
 
-  // Color based on score
   const getScoreColor = (s: number) => {
     if (s >= 80) return "text-green-500";
     if (s >= 60) return "text-blue-500";
@@ -133,23 +122,21 @@ export const ProductivityScore = ({
         {getScoreLabel(score)}
       </div>
 
-      {/* Progress bar */}
       <div className="w-full h-2 bg-muted rounded-full overflow-hidden mb-4">
         <div
           className={`h-full transition-all duration-500 ${
             score >= 80
               ? "bg-green-500"
               : score >= 60
-              ? "bg-blue-500"
-              : score >= 40
-              ? "bg-yellow-500"
-              : "bg-orange-500"
+                ? "bg-blue-500"
+                : score >= 40
+                  ? "bg-yellow-500"
+                  : "bg-orange-500"
           }`}
           style={{ width: `${score}%` }}
         />
       </div>
 
-      {/* Breakdown */}
       <div className="grid grid-cols-2 gap-3 text-xs">
         <div>
           <div className="text-muted-foreground">Productive Time</div>

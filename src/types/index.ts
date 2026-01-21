@@ -6,7 +6,7 @@ export interface DomainInfo {
 }
 
 export interface DailyUsage {
-  [domain: string]: number; // seconds spent
+  [domain: string]: number;
 }
 
 export interface UsageStore {
@@ -17,12 +17,11 @@ export interface StorageData {
   usage: UsageStore;
   categories: Record<string, Category>;
   settings: {
-    idleThreshold: number; // seconds
+    idleThreshold: number;
   };
 }
 
 export const DEFAULT_CATEGORIES: Record<string, Category> = {
-  // Work & Productivity
   "github.com": "Work",
   "gitlab.com": "Work",
   "bitbucket.org": "Work",
@@ -60,7 +59,7 @@ export const DEFAULT_CATEGORIES: Record<string, Category> = {
   "udacity.com": "Learning",
   "linkedin.com/learning": "Learning",
   "skillshare.com": "Learning",
-  "youtube.com/watch": "Learning", // YouTube videos can be learning
+  "youtube.com/watch": "Learning",
   "medium.com": "Learning",
   "dev.to": "Learning",
   "hackernoon.com": "Learning",
@@ -88,5 +87,5 @@ export const DEFAULT_CATEGORIES: Record<string, Category> = {
   "soundcloud.com": "Other",
   "amazon.com": "Other",
   "ebay.com": "Other",
-  "news.ycombinator.com": "Learning", // Hacker News for tech learning
+  "news.ycombinator.com": "Learning",
 };
