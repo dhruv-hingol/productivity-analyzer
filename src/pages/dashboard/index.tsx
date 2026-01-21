@@ -27,11 +27,10 @@ const CATEGORY_COLORS: Record<string, string> = {
   Other: "#64748b",
 };
 
-// Helper functions to get Monday and Sunday of a week
 const getMondayOfWeek = (date: Date): Date => {
   const d = new Date(date);
   const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
   d.setDate(diff);
   return d;
 };
@@ -47,7 +46,6 @@ const Dashboard = () => {
   const { usage, categories, isLoading, fetchData, updateCategory, resetData } =
     useStore();
 
-  // Separate state for bar chart (date range) and pie chart (single date)
   const [startDate, setStartDate] = useState(() => getMondayOfWeek(new Date()));
   const [endDate, setEndDate] = useState(() => getSundayOfWeek(new Date()));
   const [pieChartDate, setPieChartDate] = useState(new Date());
@@ -66,43 +64,44 @@ const Dashboard = () => {
   }, [fetchData]);
   const weeklyData = useMemo(
     () => aggregateWeeklyData(usage, startDateStr, endDateStr),
-    [usage, startDateStr, endDateStr]
+    [usage, startDateStr, endDateStr],
   );
   const todayTopDomains = useMemo(
     () => getTopDomains(usage, tableDateStr, 50),
-    [usage, tableDateStr]
+    [usage, tableDateStr],
   );
 
   const filteredDomains = useMemo(() => {
     return todayTopDomains.filter((d) =>
-      d.domain.toLowerCase().includes(searchTerm.toLowerCase())
+      d.domain.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }, [todayTopDomains, searchTerm]);
 
   const totalTodaySeconds = useMemo(
     () => getTotalSeconds(usage, pieChartDateStr),
-    [usage, pieChartDateStr]
+    [usage, pieChartDateStr],
   );
 
   const categoryData = useMemo(() => {
     const dayUsage = usage[pieChartDateStr] || {};
     const summary = Object.entries(dayUsage)
       .filter(([domain]) => !IGNORED_DOMAINS.includes(domain))
-      .reduce((acc, [domain, seconds]) => {
-        const cat = categories[domain] || "Other";
-        acc[cat] = (acc[cat] || 0) + seconds;
-        return acc;
-      }, {} as Record<string, number>);
+      .reduce(
+        (acc, [domain, seconds]) => {
+          const cat = categories[domain] || "Other";
+          acc[cat] = (acc[cat] || 0) + seconds;
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
 
     return Object.entries(summary).map(([name, value]) => ({
       name,
-      value: Math.round((value / 3600) * 100) / 100, // Convert to hours with 2 decimal places
     }));
   }, [usage, pieChartDateStr, categories]);
 
   const usageColumns = useUsageColumns({ categories, updateCategory });
 
-  // Date sync effect
   useEffect(() => {
     if (dateSyncEnabled) {
       setTableDate(pieChartDate);
@@ -143,20 +142,16 @@ const Dashboard = () => {
     setEndDate(getSundayOfWeek(today));
   };
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Ctrl/Cmd + Left Arrow: Previous week
       if ((e.ctrlKey || e.metaKey) && e.key === "ArrowLeft") {
         e.preventDefault();
         handlePreviousWeek();
       }
-      // Ctrl/Cmd + Right Arrow: Next week
       if ((e.ctrlKey || e.metaKey) && e.key === "ArrowRight") {
         e.preventDefault();
         handleNextWeek();
       }
-      // Ctrl/Cmd + T: Jump to today
       if ((e.ctrlKey || e.metaKey) && e.key === "t") {
         e.preventDefault();
         setAllDatesToToday();
@@ -253,6 +248,6 @@ if (container) {
   root.render(
     <ThemeProvider defaultTheme="dark" storageKey="aegis-theme">
       <Dashboard />
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }

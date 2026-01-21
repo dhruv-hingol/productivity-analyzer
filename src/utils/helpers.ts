@@ -1,6 +1,6 @@
 export const getDomain = (
   url: string | undefined,
-  title?: string
+  title?: string,
 ): string | null => {
   if (!url || url === "about:blank" || url.startsWith("chrome://newtab"))
     return null;
@@ -8,7 +8,6 @@ export const getDomain = (
   try {
     const urlObj = new URL(url);
 
-    // Handle Chrome/Internal pages
     if (urlObj.protocol === "chrome:" || urlObj.protocol === "edge:") {
       const pageName = urlObj.hostname || urlObj.pathname.split("/")[1] || "";
       if (!pageName || pageName === "newtab") return null;
@@ -17,28 +16,22 @@ export const getDomain = (
       return `Browser: ${capitalized}`;
     }
 
-    // Handle Extensions (Filter out our own extension)
     if (urlObj.protocol === "chrome-extension:") {
-      // Filter out our own dashboard/options
       if (title?.includes("Productivity Analyzer")) return null;
       return title ? `Extension: ${title}` : "Browser Extension";
     }
 
-    // Handle Local Files
     if (urlObj.protocol === "file:") {
       return title ? `File: ${title}` : "Local File";
     }
 
-    // Standard hostnames (keep www. as requested)
     let domain = urlObj.hostname;
     if (domain) return domain;
 
-    // Fallback for cases with no hostname
     if (title && !["new tab", "empty page"].includes(title.toLowerCase()))
       return title;
     return null;
   } catch {
-    // Fallback for malformed URLs
     if (title && !["new tab", "empty page"].includes(title.toLowerCase()))
       return title;
     return null;
@@ -58,7 +51,7 @@ export const formatMinutesToTime = (minutes: number): string => {
 
   return `${String(hours).padStart(2, "0")}:${String(mins).padStart(
     2,
-    "0"
+    "0",
   )}:${String(secs).padStart(2, "0")}`;
 };
 
@@ -70,6 +63,6 @@ export const formatHoursToTime = (hours: number): string => {
 
   return `${String(hrs).padStart(2, "0")}:${String(mins).padStart(
     2,
-    "0"
+    "0",
   )}:${String(secs).padStart(2, "0")}`;
 };

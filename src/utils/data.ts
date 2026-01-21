@@ -14,9 +14,8 @@ export const getDateRange = (startDate: string, endDate: string): string[] => {
   const start = new Date(startDate);
   const end = new Date(endDate);
 
-  // Calculate the number of days between start and end
   const daysDiff = Math.floor(
-    (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
+    (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24),
   );
 
   for (let i = 0; i <= daysDiff; i++) {
@@ -41,7 +40,7 @@ export const getLast7Days = (endDate: string): string[] => {
 export const aggregateWeeklyData = (
   usage: UsageStore,
   startDate: string,
-  endDate: string
+  endDate: string,
 ) => {
   const dateRange = getDateRange(startDate, endDate);
   return dateRange.map((date) => {
@@ -84,10 +83,10 @@ export const getTotalSeconds = (usage: UsageStore, date: string): number => {
 
 export const getUniqueDomainsCount = (
   usage: UsageStore,
-  date: string
+  date: string,
 ): number => {
   const dayUsage = usage[date] || {};
   return Object.keys(dayUsage).filter(
-    (domain) => !IGNORED_DOMAINS.includes(domain)
+    (domain) => !IGNORED_DOMAINS.includes(domain),
   ).length;
 };
